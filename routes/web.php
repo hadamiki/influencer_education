@@ -2,9 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 
-// User
-use App\Http\Controllers\User\CurriculumController as UserCurriculumController;
-
 // Admin
 use App\Http\Controllers\Admin\Auth\RegisterController as AdminRegisterController;
 use App\Http\Controllers\Admin\Auth\LoginController as AdminLoginController;
@@ -17,25 +14,13 @@ use App\Http\Controllers\Admin\BannerController;
 |--------------------------------------------------------------------------
 */
 
+Route::get('/', function () {
+    return view('welcome');
+});
+
 Route::get('/login', function () {
     return redirect()->route('admin.show.login');
 })->name('login');
-
-
-// ==============================
-// User（一般ユーザー）
-// ==============================
-Route::prefix('user')->as('user.')->group(function () {
-
-    // 時間割（授業一覧
-    Route::middleware(['auth'])->group(function () {
-        Route::get('/curriculum_list', [UserCurriculumController::class, 'showCurriculumList'])
-            ->name('show.curriculum');
-    });
-
-    // Route::get('/login', ...)->name('show.login');
-    // Route::get('/register', ...)->name('show.register');
-});
 
 
 // ==============================
@@ -59,7 +44,7 @@ Route::prefix('admin')->as('admin.')->group(function () {
         // トップ
         Route::get('/top', [TopController::class, 'index'])->name('show.top');
 
-        // バナー設定画面: /admin/banner_edit name: admin.show.banner.edit
+        // バナー設定画面
         Route::get('/banner_edit', [BannerController::class, 'showBannerEdit'])->name('show.banner.edit');
 
         // バナー更新
@@ -69,6 +54,7 @@ Route::prefix('admin')->as('admin.')->group(function () {
         Route::get('/curriculums', fn () => '授業管理（仮）')->name('curriculums.index');
         Route::get('/articles', fn () => 'お知らせ管理（仮）')->name('articles.index');
 
+        // ログアウト
         Route::post('/logout', [AdminLoginController::class, 'destroy'])->name('logout');
     });
 });
