@@ -21,20 +21,48 @@
             @csrf
 
             <label class="label" for="name">ユーザーネーム</label>
-            <input class="input" id="name" type="text" name="name" value="{{ old('name') }}" required autofocus>
+            <input
+                class="input"
+                id="name"
+                type="text"
+                name="name"
+                value="{{ old('name') }}"
+                autofocus
+            >
 
             <label class="label" for="kana">ユーザーネーム（カナ）</label>
-            <input class="input" id="kana" type="text" name="kana" value="{{ old('kana') }}" required>
-
+            <input
+                class="input"
+                id="kana"
+                type="text"
+                name="kana"
+                value="{{ old('kana') }}"
+            >
 
             <label class="label" for="email">メールアドレス</label>
-            <input class="input" id="email" type="email" name="email" value="{{ old('email') }}" required>
+            <input
+                class="input"
+                id="email"
+                type="email"
+                name="email"
+                value="{{ old('email') }}"
+            >
 
             <label class="label" for="password">パスワード</label>
-            <input class="input" id="password" type="password" name="password" required>
+            <input
+                class="input"
+                id="password"
+                type="password"
+                name="password"
+            >
 
             <label class="label" for="password_confirmation">パスワード（確認）</label>
-            <input class="input" id="password_confirmation" type="password" name="password_confirmation" required>
+            <input
+                class="input"
+                id="password_confirmation"
+                type="password"
+                name="password_confirmation"
+            >
 
             <button class="btn-primary" type="submit">登録</button>
 

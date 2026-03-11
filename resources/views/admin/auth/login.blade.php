@@ -21,10 +21,22 @@
             @csrf
 
             <label class="label" for="email">メールアドレス</label>
-            <input class="input" id="email" type="email" name="email" value="{{ old('email') }}" required autofocus>
+            <input
+                class="input"
+                id="email"
+                type="email"
+                name="email"
+                value="{{ old('email') }}"
+                autofocus
+            >
 
             <label class="label" for="password">パスワード</label>
-            <input class="input" id="password" type="password" name="password" required>
+            <input
+                class="input"
+                id="password"
+                type="password"
+                name="password"
+            >
 
             <button class="btn-primary" type="submit">ログイン</button>
 
