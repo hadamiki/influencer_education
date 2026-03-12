@@ -30,10 +30,8 @@ Route::prefix('admin')->as('admin.')->group(function () {
 
     // ログイン表示
     Route::get('/login', [AdminLoginController::class, 'showLoginForm'])->name('show.login');
-    // ログイン処理
-    Route::post('/login', [AdminLoginController::class, 'store'])->name('login.store');
+    Route::post('/login', [AdminLoginController::class, 'store'])->middleware('throttle:auth')->name('login.store');
 
-    // 新規登録表示
     Route::get('/register', [AdminRegisterController::class, 'showRegisterForm'])->name('show.register');
     // 登録処理
     Route::post('/register', [AdminRegisterController::class, 'store'])->name('register.store');

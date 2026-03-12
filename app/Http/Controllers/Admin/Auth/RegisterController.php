@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Admin\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\Admin;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules\Password;
 
 class RegisterController extends Controller
 {
@@ -31,7 +33,7 @@ class RegisterController extends Controller
                     'regex:/^[ァ-ヶー]+$/u'
                 ],
                 'email' => ['required', 'email', 'max:255', 'unique:admins,email'],
-                'password' => ['required', 'confirmed', 'min:8'],
+                'password' => ['required', 'confirmed', Password::defaults()],
             ],
             [
                 'name.required' => 'ユーザーネームは必須です',
@@ -48,7 +50,6 @@ class RegisterController extends Controller
                 'email.unique' => 'このメールアドレスは既に登録されています',
 
                 'password.required' => 'パスワードは必須です',
-                'password.min' => 'パスワードは8文字以上で入力してください',
                 'password.confirmed' => '確認用パスワードと一致しません',
             ]
         );
@@ -60,8 +61,8 @@ class RegisterController extends Controller
             'password' => Hash::make($validated['password']),
         ]);
 
-        Auth::guard('admin')->login($admin);
+        event(new Registered($admin));
 
-        return redirect()->route('admin.show.top');
+        return redirect()->route('admin.show.login');
     }
 }

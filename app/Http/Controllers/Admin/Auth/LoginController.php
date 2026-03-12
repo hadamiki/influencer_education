@@ -35,7 +35,7 @@ class LoginController extends Controller
 
             $request->session()->regenerate();
 
-            return redirect()->route('admin.show.top');
+            return redirect()->intended(route('admin.show.top'));
         }
 
         return back()
