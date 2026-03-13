@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\LoginRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -17,22 +18,11 @@ class LoginController extends Controller
         return view('admin.auth.login');
     }
 
-    public function store(Request $request)
+    public function store(LoginRequest $request)
     {
-        $credentials = $request->validate(
-            [
-                'email' => ['required', 'email'],
-                'password' => ['required'],
-            ],
-            [
-                'email.required' => 'メールアドレスは必須です',
-                'email.email' => 'メールアドレス形式で入力してください',
-                'password.required' => 'パスワードは必須です',
-            ]
-        );
+        $credentials = $request->validated();
 
         if (Auth::guard('admin')->attempt($credentials)) {
-
             $request->session()->regenerate();
 
             return redirect()->intended(route('admin.show.top'));
