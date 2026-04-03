@@ -5,8 +5,11 @@ use Illuminate\Support\Facades\Route;
 // Admin
 use App\Http\Controllers\Admin\Auth\RegisterController as AdminRegisterController;
 use App\Http\Controllers\Admin\Auth\LoginController as AdminLoginController;
-use App\Http\Controllers\Admin\TopController;
+use App\Http\Controllers\Admin\TopController as AdminTopController;
 use App\Http\Controllers\Admin\BannerController;
+
+// User
+use App\Http\Controllers\User\CurriculumController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,35 +27,38 @@ Route::get('/login', function () {
 
 
 // ==============================
+// User（通常ユーザー）
+// ==============================
+Route::name('user.')->group(function () {
+    Route::get('/top', function () {
+        return 'ユーザートップページ（仮）';
+    })->name('show.top');
+
+    Route::get('/curriculum_list', [CurriculumController::class, 'showCurriculumList'])
+        ->name('show.curriculum');
+});
+
+
+// ==============================
 // Admin（管理ユーザー）
 // ==============================
-Route::prefix('admin')->as('admin.')->group(function () {
-
-    // ログイン表示
+Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/login', [AdminLoginController::class, 'showLoginForm'])->name('show.login');
-    Route::post('/login', [AdminLoginController::class, 'store'])->middleware('throttle:auth')->name('login.store');
+    Route::post('/login', [AdminLoginController::class, 'store'])
+        ->middleware('throttle:auth')
+        ->name('login.store');
 
     Route::get('/register', [AdminRegisterController::class, 'showRegisterForm'])->name('show.register');
-    // 登録処理
     Route::post('/register', [AdminRegisterController::class, 'store'])->name('register.store');
 
-    // ログイン後
     Route::middleware('auth:admin')->group(function () {
-
-        // トップ
-        Route::get('/top', [TopController::class, 'index'])->name('show.top');
-
-        // バナー設定画面
+        Route::get('/top', [AdminTopController::class, 'index'])->name('show.top');
         Route::get('/banner_edit', [BannerController::class, 'showBannerEdit'])->name('show.banner.edit');
-
-        // バナー更新
         Route::post('/banners', [BannerController::class, 'update'])->name('banners.update');
 
-        // 仮ルート
         Route::get('/curriculums', fn () => '授業管理（仮）')->name('curriculums.index');
         Route::get('/articles', fn () => 'お知らせ管理（仮）')->name('articles.index');
 
-        // ログアウト
         Route::post('/logout', [AdminLoginController::class, 'destroy'])->name('logout');
     });
 });
