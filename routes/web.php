@@ -29,7 +29,9 @@ Route::get('/login', function () {
 // ==============================
 // User（通常ユーザー）
 // ==============================
-Route::name('user.')->group(function () {
+
+//※ログインユーザー認証機能は管轄外のため後でauth付与
+Route::prefix('user')->name('user.')->group(function () {
     Route::get('/top', function () {
         return 'ユーザートップページ（仮）';
     })->name('show.top');
