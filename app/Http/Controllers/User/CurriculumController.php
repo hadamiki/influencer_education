@@ -3,13 +3,13 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\User\CurriculumListRequest;
 use App\Models\Curriculum;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 
 class CurriculumController extends Controller
 {
-    public function showCurriculumList(Request $request)
+    public function showCurriculumList(CurriculumListRequest $request)
     {
         $data = $this->getCurriculumListData($request);
 
@@ -50,19 +50,11 @@ class CurriculumController extends Controller
         return view('user.curriculum_list', $data);
     }
 
-    private function getCurriculumListData(Request $request): array
+    private function getCurriculumListData(CurriculumListRequest $request): array
     {
         $selectedGradeId = $request->input('grade_id');
         $year = (int) $request->input('year', now()->year);
         $month = (int) $request->input('month', now()->month);
-
-        if ($month < 1 || $month > 12) {
-            $month = now()->month;
-        }
-
-        if ($year < 2000 || $year > 2100) {
-            $year = now()->year;
-        }
 
         $currentMonth = Carbon::create($year, $month, 1);
         $prevMonth = $currentMonth->copy()->subMonth();
@@ -84,9 +76,9 @@ class CurriculumController extends Controller
 
         $query->where(function ($q) use ($monthStart, $monthEnd) {
             $q->where('alway_delivery_flg', 1)
-              ->orWhereHas('deliveryTimes', function ($query) use ($monthStart, $monthEnd) {
-                  $query->whereBetween('delivery_from', [$monthStart, $monthEnd]);
-              });
+                ->orWhereHas('deliveryTimes', function ($query) use ($monthStart, $monthEnd) {
+                    $query->whereBetween('delivery_from', [$monthStart, $monthEnd]);
+                });
         });
 
         $curriculums = $query->get();
